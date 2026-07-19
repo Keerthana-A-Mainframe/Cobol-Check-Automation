@@ -25,3 +25,39 @@ cd ..
 
 # Function to run cobolcheck and copy files
 run_cobolcheck() {
+  program=$1
+  echo "Running cobolcheck for $program"
+
+  # Run cobolcheck via the jar file, but don't exit if it fails
+  java -jar bin/cobol-check-0.2.19.jar -p $program
+  echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
+
+  # Check if CC##99.CBL was created, regardless of cobolcheck exit status
+  if [ -f "CC##99.CBL" ]; then
+    if cp CC##99.CBL "//'${ZOWE_USERNAME}.CBL(${program})'"; then
+      echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+    else
+      echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+    fi
+  else
+    echo "CC##99.CBL not found for $program"
+  fi
+
+  # Copy the JCL file if it exists (JCL files live at repo root, one level up from cobol-check/)
+  if [ -f "../${program}.JCL" ]; then
+    if cp ../${program}.JCL "//'${ZOWE_USERNAME}.JCL(${program})'"; then
+      echo "Copied ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
+    else
+      echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
+    fi
+  else
+    echo "${program}.JCL not found"
+  fi
+}
+
+# Run for each program
+for program in NUMBERS EMPPAY DEPTPAY; do
+  run_cobolcheck $program
+done
+
+echo "Mainframe operations completed"
