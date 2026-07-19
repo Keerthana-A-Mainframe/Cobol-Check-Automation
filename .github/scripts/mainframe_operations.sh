@@ -34,7 +34,7 @@ run_cobolcheck() {
 
   # Check if CC##99.CBL was created, regardless of cobolcheck exit status
   if [ -f "CC##99.CBL" ]; then
-    if cp CC##99.CBL "//'${ZOWE_USERNAME}.CBL(${program})'"; then
+    if zowe zos-files upload file-to-data-set CC##99.CBL "${ZOWE_USERNAME}.CBL(${program})"; then
       echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     else
       echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
@@ -45,7 +45,7 @@ run_cobolcheck() {
 
   # Copy the JCL file if it exists (JCL files live at repo root, one level up from cobol-check/)
   if [ -f "../${program}.JCL" ]; then
-    if cp ../${program}.JCL "//'${ZOWE_USERNAME}.JCL(${program})'"; then
+    if zowe zos-files upload file-to-data-set ../${program}.JCL "${ZOWE_USERNAME}.JCL(${program})"; then
       echo "Copied ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
     else
       echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
