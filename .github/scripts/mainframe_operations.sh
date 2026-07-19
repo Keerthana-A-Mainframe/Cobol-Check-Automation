@@ -33,8 +33,8 @@ run_cobolcheck() {
   echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
 
   # Check if CC##99.CBL was created, regardless of cobolcheck exit status
-  if [ -f "CC##99.CBL" ]; then
-    if zowe zos-files upload file-to-data-set CC##99.CBL "${ZOWE_USERNAME}.CBL(${program})"; then
+  if [ -f "testruns/CC##99.CBL" ]; then
+    if zowe zos-files upload file-to-data-set testruns/CC##99.CBL "${ZOWE_USERNAME}.CBL(${program})"; then
       echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     else
       echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
